@@ -34,6 +34,6 @@ class CalcController extends AbstractController
         $calcSimple->setRequest($request);
         $calcSimple->setResponse($response);
 
-        return $this->render('calc.html.twig', $calcSimple->getResponse()->toArray());
+        return $this->render('calc.html.twig', $response->toArray());
     }
 }

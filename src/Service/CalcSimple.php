@@ -11,8 +11,6 @@ class CalcSimple
     private string $number2;
     private string $operation;
 
-    private CalcSimpleResponse $response;
-
     public function setRequest(Request $request)
     {
         $this->number1 = $request->request->get('number1');
@@ -20,25 +18,19 @@ class CalcSimple
         $this->operation = $request->request->get('operation');
     }
 
-    public function setResponse(CalcSimpleResponse $response)
+    public function setResponse(CalcSimpleResponse &$response)
     {
-        $this->response = $response;
-        $this->response->total = $this->getTotal();
-        $this->response->number1 = $this->number1;
-        $this->response->number2 = $this->number2;
-        $this->response->operation = $this->operation;
+        $response->total   = $this->getTotal($response);
+        $response->number1 = $this->number1;
+        $response->number2 = $this->number2;
+        $response->operation = $this->operation;
     }
 
-    public function getResponse(): CalcSimpleResponse
-    {
-        return $this->response;
-    }
-
-    private function getTotal(): float
+    private function getTotal(&$response): float
     {
         $total = 0;
 
-        if(!$this->isNumeric())
+        if(!$this->isNumeric($response))
         {
             return $total;
         }
@@ -65,12 +57,12 @@ class CalcSimple
         return $total;
     }
 
-    private function isNumeric()
+    private function isNumeric(&$response)
     {
         if (!is_numeric($this->number1) || !is_numeric($this->number2))
         {
-            $this->response->error->show = true;
-            $this->response->error->text = 'Numeric values are required';
+            $response->error->show = true;
+            $response->error->text = 'Numeric values are required';
             return false;
         }
 
